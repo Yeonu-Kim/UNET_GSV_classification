@@ -7,13 +7,16 @@ import torch
 import torch.nn.functional as F
 from PIL import Image
 from torchvision import transforms
+import sys
 from os import listdir
 from os.path import join
 from pathlib import Path
 
-from utils.data_loading import BasicDataset
-from unet import UNet
-from utils.utils import plot_img_and_mask
+from .utils.data_loading import BasicDataset
+from .unet import UNet
+from .utils.utils import plot_img_and_mask
+
+sys.path.append(os.pardir)
 
 def predict_img(net,
                 full_img,
@@ -107,7 +110,6 @@ def predictSkyRatio():
                            scale_factor=args.scale,
                            out_threshold=args.mask_threshold,
                            device=device)
-        print(np.sum(mask)/np.size(mask))
 
         if not args.no_save:
             out_filename = f"output/output_{i}.jpg"
@@ -120,6 +122,5 @@ def predictSkyRatio():
             logging.info(f'Visualizing results for image {filename}, close to continue...')
             plot_img_and_mask(img, mask)
 
-    return np.sum(mask)/np.size(mask)
-
-predictSkyRatio()
+    sky_ratio = np.sum(mask)/np.size(mask)
+    return sky_ratio, mask
