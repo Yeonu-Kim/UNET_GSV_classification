@@ -9,32 +9,25 @@ import skimage
 
 sys.path.append(os.pardir)
 
-def loadImg(lat, lon, APIkey, heading, fov):
+def loadImg(lat:float, lon:float, APIkey:str, heading:int, fov:int):
     endpoint = 'https://maps.googleapis.com/maps/api/streetview/metadata'
 
-    location = f'{lat},{lon}'
-    image_container = []
-
     params = {
-        'location': location,
+        'location': f"{lon},{lat}",
         'key': APIkey,
         'heading': f"{heading}",
         'fov': f"{fov}"
     }
-    url = f"https://maps.googleapis.com/maps/api/streetview?size=640x192&location={params['location']}&heading={params['heading']}&fov={params['fov']}&key={params['key']}"
+    url = f"https://maps.googleapis.com/maps/api/streetview?size=640x192&location={params['location']}&heading={params['heading']}&fov={params['fov']}&return_error_code=true&key={params['key']}"
 
-    payload = {}
-    headers = {}
-    response = requests.request("GET", url, headers=headers, data=payload)
-    print(response)
-    panoID = response.status_code
+    response = requests.get(url)
+    status = response.status_code
 
     bytes_data = response.content
-    image = Image.open(io.BytesIO(bytes_data))
+    image = Image.open(io.BytesIO(bytes_data)) if status == 200 else None
+    return status, image
 
-    return image, panoID
-
-def loadLocalImg(path):
+def loadLocalImg(path:str):
     imageOriginal = skimage.io.imread(path)
     image = skimage.transform.resize(imageOriginal, (320, 1024))
     image = image[:, :, :3]
