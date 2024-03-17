@@ -4,6 +4,7 @@ import os
 import random
 import sys
 import torch
+import PIL
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as transforms
@@ -169,7 +170,7 @@ def train_model(
 
 def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=5, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=50, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-5,
                         help='Learning rate', dest='lr')
@@ -185,6 +186,21 @@ def get_args():
 
 
 if __name__ == '__main__':
+    # # Check truncated images
+    # checkdir = "./data/imgs"
+    # files = os.listdir(checkdir)
+    # format = [".jpg", ".jpeg"]
+
+    # for(path, dirs, f) in os.walk(checkdir):
+    #     for file in f:
+    #         if file.endswith(tuple(format)):
+    #             try:
+    #                 image = PIL.Image.open(path+"/"+file).load()
+    #                 # print(image)
+    #             except Exception as e:
+    #                 print("An exception is raised:", e)
+    #                 print(file)
+
     args = get_args()
 
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')

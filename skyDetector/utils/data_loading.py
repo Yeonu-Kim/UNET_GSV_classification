@@ -24,7 +24,10 @@ def load_image(filename):
 
 
 def unique_mask_values(idx, mask_dir, mask_prefix):
-    mask_file = list(mask_dir.glob(mask_prefix + idx + '.*'))[0]
+    fileList = list(mask_dir.glob(mask_prefix + idx + '.*'))
+    if len(fileList) != 1:
+        raise ValueError(f"There are not file name: {mask_prefix + idx + '.*'}")
+    mask_file = fileList[0]
     mask = np.asarray(load_image(mask_file))
     print(mask_file)
     print(mask.ndim)

@@ -9,22 +9,21 @@ import skimage
 
 sys.path.append(os.pardir)
 
-def loadImg(lat:float, lon:float, APIkey:str, heading:int, fov:int):
-    endpoint = 'https://maps.googleapis.com/maps/api/streetview/metadata'
-
+def loadImg(lat:float, lon:float, APIkey:str, fov:int, turn: int):
     params = {
-        'location': f"{lon},{lat}",
-        'key': APIkey,
-        'heading': f"{heading}",
-        'fov': f"{fov}"
-    }
-    url = f"https://maps.googleapis.com/maps/api/streetview?size=640x192&location={params['location']}&heading={params['heading']}&fov={params['fov']}&return_error_code=true&key={params['key']}"
+            'location': f"{lon},{lat}",
+            'key': APIkey,
+            'heading': f"{120*turn}",
+            'fov': f"{fov}"
+        }
+    url = f"https://maps.googleapis.com/maps/api/streetview?size=600x300&location={params['location']}&fov={params['fov']}&heading={params['heading']}&return_error_code=true&key={params['key']}"
 
     response = requests.get(url)
     status = response.status_code
 
     bytes_data = response.content
     image = Image.open(io.BytesIO(bytes_data)) if status == 200 else None
+        
     return status, image
 
 def loadLocalImg(path:str):

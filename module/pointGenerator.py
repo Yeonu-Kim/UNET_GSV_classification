@@ -6,8 +6,8 @@ def pointListGen(basePointList: list):
     for idx, basePoint in enumerate(basePointList):
         lat_left, lat_right, lon_down, lon_up = basePoint
 
-        latList = np.arange(lat_left, lat_right, 0.0005)
-        lonList = np.arange(lon_down, lon_up, 0.0005)
+        latList = np.arange(lat_left, lat_right, 0.001)
+        lonList = np.arange(lon_down, lon_up, 0.001)
 
         latGrid, lonGrid = np.meshgrid(latList, lonList)
         # Flatten 2d array to 1d array
